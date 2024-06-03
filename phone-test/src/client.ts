@@ -10,6 +10,9 @@ import { onError } from '@apollo/client/link/error';
 import { GraphQLError } from 'graphql';
 import { REFRESH_TOKEN } from './gql/mutations/refreshToken';
 
+const REFRESH_TOKEN_V2 = 'refreshTokenV2';
+const UNAUTHORIZED = 'Unauthorized';
+
 const httpLink = createHttpLink({
   uri: 'https://frontend-test-api.aircall.dev/graphql'
 });
@@ -18,7 +21,7 @@ const authLink = new ApolloLink((operation, forward) => {
   const accessToken = localStorage.getItem('access_token');
   let token = accessToken || undefined;
 
-  if (operation.operationName === 'refreshTokenV2') {
+  if (operation.operationName === REFRESH_TOKEN_V2) {
     const refreshToken = localStorage.getItem('refresh_token');
     token = refreshToken || undefined;
   }
@@ -54,16 +57,14 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
   if (graphQLErrors) {
     for (let err of graphQLErrors) {
       switch (err.message) {
-        case 'Unauthorized':
+        case UNAUTHORIZED:
           // ignore 401 error for a refresh request
-          if (operation.operationName === 'refreshTokenV2') return;
+          if (operation.operationName === REFRESH_TOKEN_V2) return;
 
-          const observable = new Observable<FetchResult<Record<string, any>>>(observer => {
-            // used an annonymous function for using an async function
+          const observable = new Observable<FetchResult<Record<string, object>>>(observer => {
             (async () => {
               try {
                 const accessToken = await refreshToken();
-
                 operation.setContext({
                   headers: {
                     ...operation.getContext().headers,
@@ -71,14 +72,11 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
                   }
                 });
 
-                // Retry the failed request
-                const subscriber = {
+                forward(operation).subscribe({
                   next: observer.next.bind(observer),
                   error: observer.error.bind(observer),
                   complete: observer.complete.bind(observer)
-                };
-
-                forward(operation).subscribe(subscriber);
+                });
               } catch (err) {
                 observer.error(err);
               }
