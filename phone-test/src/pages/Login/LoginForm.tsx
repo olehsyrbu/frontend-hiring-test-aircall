@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import { ToastItem, Typography } from '@aircall/tractor';
 import {
   Button,
   Form,
@@ -25,6 +25,7 @@ export const LoginForm = ({ onSubmit, formState }: LoginFormProps) => {
     <Form
       onSubmit={e => {
         e.preventDefault();
+
         onSubmit(email, password);
       }}
       width="100%"
@@ -34,12 +35,14 @@ export const LoginForm = ({ onSubmit, formState }: LoginFormProps) => {
           <TextFieldInput
             placeholder="job@aircall.io"
             value={email}
+            required
             onChange={e => setEmail(e.target.value)}
           />
         </FormItem>
         <FormItem label="Password" name="password">
           <TextFieldInput
             type="password"
+            required
             value={password}
             onChange={e => setPassword(e.target.value)}
           />
