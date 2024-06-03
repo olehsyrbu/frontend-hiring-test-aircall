@@ -1,4 +1,4 @@
-import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useMemo, useState } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { FetchResult, useMutation, useQuery } from '@apollo/client';
 import { useLocalStorage } from '../hooks/useLocalStorage';
@@ -29,14 +29,12 @@ export const AuthProvider = () => {
   const [accessToken, setAccessToken] = useLocalStorage('access_token', undefined);
   const [refreshToken, setRefreshToken] = useLocalStorage('refresh_token', undefined);
   const [loginMutation] = useMutation(LOGIN);
-  const { loading, error, data } = useQuery(ME);
-  const { me } = data || {};
 
-  useEffect(() => {
-    if (!loading && !error && me?.username) {
-      setUser(me);
+  useQuery(ME, {
+    onCompleted: data => {
+      setUser(data.me);
     }
-  }, [me, loading, error]);
+  });
 
   const login = useCallback(
     ({ username, password }: { username: string; password: string }) => {
