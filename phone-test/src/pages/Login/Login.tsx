@@ -1,22 +1,19 @@
 import * as React from 'react';
 import { Flex, Icon, LogoMarkMono, Spacer, useToast } from '@aircall/tractor';
 
-import { FormState } from './Login.decl';
+import { FormState, FormStateEnum, LOGIN_REJECTED } from './Login.decl';
 import { LoginForm } from './LoginForm';
 import { useAuth } from '../../hooks/useAuth';
 
-const LOGIN_REJECTED = 'LOGIN_REJECTED';
-
 export const LoginPage = () => {
   const { login } = useAuth();
-  const [formState, setFormState] = React.useState<FormState>('Idle');
-  const { showToast, removeToast } = useToast();
+  const [formState, setFormState] = React.useState<FormState>(FormStateEnum.Idle);
+  const { showToast } = useToast();
 
   const onSubmit = async (email: string, password: string) => {
     try {
-      setFormState('Pending');
+      setFormState(FormStateEnum.Pending);
       await login({ username: email, password });
-      removeToast(LOGIN_REJECTED);
     } catch (error) {
       console.log(error);
       showToast({
