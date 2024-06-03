@@ -12,14 +12,5 @@ export const useSearch = () => {
   const perPage = !!perPageQueryParams ? parseInt(perPageQueryParams) : CALLS_PER_PAGE;
   const filterValue = filterQueryParams || '';
 
-  const mergeUrlParams = (search: string, newParams: object) => {
-    const params = new URLSearchParams(search);
-
-    for (const [key, value] of Object.entries(newParams)) {
-      params.set(key, value);
-    }
-    return params.toString();
-  };
-
-  return { activePage, perPage, filterValue, mergeUrlParams };
+  return { activePage, perPage, filterValue };
 };

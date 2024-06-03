@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { Call } from '../components/Call';
 
 interface GroupedCallsByDateProps {
   [date: string]: Call[];
@@ -7,9 +6,10 @@ interface GroupedCallsByDateProps {
 
 export const useFilterGroupByDateCalls = (filterValue: string, calls: Call[]) => {
   const filteredCalls = useMemo<Call[]>(() => {
+    if (calls === undefined) return [];
     if (filterValue === '') return calls || [];
+
     return calls.filter((call: Call) => {
-      if (filterValue === '') return true;
       if (filterValue === 'inbound' || filterValue === 'outbound') {
         return call.direction === filterValue;
       }
