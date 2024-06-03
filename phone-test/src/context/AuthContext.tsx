@@ -5,16 +5,11 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { LOGIN } from '../gql/mutations';
 import { AuthContextProps } from '../declarations/auth';
 import { ME } from '../gql/queries/me';
-
-enum Status {
-  loading = 'loading',
-  authenticated = 'authenticated',
-  unauthenticated = 'unauthenticated'
-}
+import { UserStatus, UserType } from '../declarations/user';
 
 const AuthContext = createContext<AuthContextProps>({
   user: null,
-  status: Status.loading,
+  status: UserStatus.loading,
   accessToken: null,
   refreshToken: null,
   login: ({ username, password }: { username: string; password: string }) =>
@@ -25,7 +20,7 @@ const AuthContext = createContext<AuthContextProps>({
 export const AuthProvider = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<UserType | null>(null);
-  const [status, setStatus] = useState<Status>(Status.loading);
+  const [status, setStatus] = useState<UserStatus>(UserStatus.loading);
   const [accessToken, setAccessToken] = useLocalStorage('access_token', undefined);
   const [refreshToken, setRefreshToken] = useLocalStorage('refresh_token', undefined);
   const [loginMutation] = useMutation(LOGIN);
@@ -53,7 +48,7 @@ export const AuthProvider = () => {
           setAccessToken(access_token);
           setRefreshToken(refresh_token);
           setUser(user);
-          setStatus(Status.authenticated);
+          setStatus(UserStatus.authenticated);
           navigate('/calls');
         }
       });
@@ -64,7 +59,7 @@ export const AuthProvider = () => {
   const logout = useCallback(() => {
     setAccessToken(null);
     setRefreshToken(null);
-    setStatus(Status.unauthenticated);
+    setStatus(UserStatus.unauthenticated);
     navigate('/login', { replace: true });
   }, [navigate, setAccessToken, setRefreshToken]);
 
