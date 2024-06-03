@@ -1,13 +1,16 @@
 import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import styled from 'styled-components';
+import { Typography, Spacer, Pagination } from '@aircall/tractor';
+
+import { CALLS_PER_PAGE } from '../utils/constants';
 import { PAGINATED_CALLS } from '../gql/queries';
-import { Typography, Spacer, Pagination, Select } from '@aircall/tractor';
-import { Call } from '../components/Call';
-import { CALLS_PER_PAGE, filterOptions } from '../utils/constants';
 import { useFilterGroupByDateCalls } from '../hooks/useFilterGroupByDateCalls';
 import { useSearch } from '../hooks/useSearch';
 import { useNavigateWithParams } from '../hooks/useNavigateWithParams';
+import { Call } from '../components/Call';
+import { Filter } from '../components/Filter';
 
 const PaginationWrapper = styled.div`
   > div {
@@ -20,6 +23,7 @@ const PaginationWrapper = styled.div`
 
 const CallsListPage = () => {
   const navigateWithParams = useNavigateWithParams();
+  const navigate = useNavigate();
   const { activePage, perPage, filterValue } = useSearch();
 
   const { loading, error, data } = useQuery(PAGINATED_CALLS, {
@@ -37,15 +41,15 @@ const CallsListPage = () => {
   };
 
   const handlePageSizeChange = (newPageSize: number) => {
-    navigateWithParams('/calls', { limit: newPageSize });
+    navigateWithParams('/calls', { limit: newPageSize, offset: 1 });
   };
 
   const handleChangeFilter = useCallback(
     (filter: string) => {
-      if (filter === '') return navigateWithParams('/calls', {});
+      if (filter === '') return navigate('/calls');
       navigateWithParams('/calls', { filter });
     },
-    [navigateWithParams]
+    [navigateWithParams, navigate]
   );
 
   if (loading) return <p>Loading calls...</p>;
@@ -58,16 +62,7 @@ const CallsListPage = () => {
         Calls History
       </Typography>
 
-      <Select
-        selectionMode="single"
-        size="small"
-        selectedKeys={[filterValue]}
-        options={filterOptions}
-        onSelectionChange={selectedKeys => {
-          if (selectedKeys.length === 0) return;
-          handleChangeFilter(selectedKeys[0]);
-        }}
-      />
+      <Filter onChange={handleChangeFilter} value={filterValue} />
 
       <Spacer space={3} direction="vertical">
         {Object.entries(groupedCallsByDate).map(([date, calls]) => (
