@@ -9,7 +9,7 @@ export const AppRedirect = () => {
     } else {
       navigate('/login');
     }
-  }, []);
+  }, [navigate]);
 
   return <Outlet />;
 };
