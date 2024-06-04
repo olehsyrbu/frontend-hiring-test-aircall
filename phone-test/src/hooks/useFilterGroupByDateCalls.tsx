@@ -5,17 +5,18 @@ interface GroupedCallsByDateProps {
   [date: string]: Call[];
 }
 
-export const useFilterGroupByDateCalls = (filterValue: string, calls: Call[]) => {
-  const filteredCalls = useMemo<Call[]>(() => {
-    if (calls === undefined) return [];
-    if (filterValue === '') return calls || [];
+export const useFilterGroupByDateCalls = (
+  filterValue: FilterValue,
+  calls: Call[]
+): GroupedCallsByDateProps => {
+  const filteredCalls = useMemo(() => {
+    if (!calls || filterValue === '') return calls || [];
 
-    return calls.filter((call: Call) => {
-      if (filterValue === FilterValue.Inbound || filterValue === FilterValue.Outbound) {
-        return call.direction === filterValue;
-      }
-      return call.call_type === filterValue;
-    });
+    return calls.filter((call: Call) =>
+      filterValue === FilterValue.Inbound || filterValue === FilterValue.Outbound
+        ? call.direction === filterValue
+        : call.call_type === filterValue
+    );
   }, [filterValue, calls]);
 
   const groupedCallsByDate: GroupedCallsByDateProps = useMemo(
