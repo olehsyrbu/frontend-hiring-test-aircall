@@ -62,7 +62,7 @@ export const CallsListPage = () => {
 
   return (
     <>
-      <Typography variant="displayM" textAlign="center" py={3}>
+      <Typography variant="displayM" textAlign="center" py={3} data-cy="calls-list-title">
         Calls History
       </Typography>
 

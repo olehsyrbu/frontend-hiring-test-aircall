@@ -19,7 +19,9 @@ export const Filter = ({ onChange, value }: { onChange: (key: string) => void; v
       selectedKeys={[value]}
       options={filterOptions}
       onSelectionChange={selectedKeys => {
-        if (selectedKeys.length === 0) return;
+        if (selectedKeys.length === 0) {
+          return;
+        }
         onChange(selectedKeys[0]);
       }}
     />

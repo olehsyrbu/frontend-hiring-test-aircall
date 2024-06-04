@@ -28,7 +28,7 @@ export const CallDetailsPage = () => {
       <Typography variant="displayM" textAlign="center" py={3} data-cy="call-details-title">
         Calls Details
       </Typography>
-      <Box overflowY="auto" bg="black-a30" p={4} borderRadius={16}>
+      <Box overflowY="auto" bg="black-a30" p={4} borderRadius={16} data-cy="call-details-body">
         <div>{`ID: ${call.id}`}</div>
         <div>{`Type: ${call.call_type}`}</div>
         <div>{`Created at: ${formatDate(call.created_at)}`}</div>
