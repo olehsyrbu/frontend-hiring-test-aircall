@@ -54,6 +54,7 @@ export const CallDetailsPage = () => {
         Calls Details
       </Typography>
       <Box overflowY="auto" bg="black-a30" p={4} borderRadius={16} data-cy="call-details-body">
+        <Typography variant="subheading">{`ID: ${call.id}`}</Typography>
         <Typography variant="subheading">{`Type: ${call.call_type}`}</Typography>
         <Typography variant="subheading">{`Created at: ${formatDate(call.created_at)}`}</Typography>
         <Typography variant="subheading">{`Direction: ${call.direction}`}</Typography>
@@ -65,14 +66,16 @@ export const CallDetailsPage = () => {
         <Typography variant="subheading">{`To: ${call.to}`}</Typography>
         <Typography variant="subheading">{`Via: ${call.via}`}</Typography>
       </Box>
-      <Box overflowY="auto" bg="black-a30" p={4} borderRadius={16}>
-        <Typography variant="subheading">Notes</Typography>
-        {call.notes?.map((note: Note, index: number) => (
-          <Typography variant="body" key={note.id}>{`Note ${index + 1}: ${
-            note.content
-          }`}</Typography>
-        ))}
-      </Box>
+      {call.notes.length > 0 && (
+        <Box overflowY="auto" bg="black-a30" p={4} borderRadius={16}>
+          <Typography variant="subheading">Notes</Typography>
+          {call.notes?.map((note: Note, index: number) => (
+            <Typography variant="body" key={note.id}>{`Note ${index + 1}: ${
+              note.content
+            }`}</Typography>
+          ))}
+        </Box>
+      )}
       <Button
         variant={call.is_archived ? 'instructive' : 'destructive'}
         disabled={archiveState.loading}
