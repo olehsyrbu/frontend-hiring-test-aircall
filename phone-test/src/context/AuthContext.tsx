@@ -1,11 +1,12 @@
-import { createContext, useCallback, useMemo, useState } from 'react';
+import { createContext, useCallback, useMemo, useState, useEffect } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { FetchResult, useMutation, useQuery } from '@apollo/client';
 import { useLocalStorage } from 'src/hooks/useLocalStorage';
 import { AuthContextProps } from 'src/declarations/auth';
 import { UserStatus, UserType } from 'src/declarations/user';
-import { QUERY_ME } from 'src/gql/queries';
-import { LOGIN } from 'src/gql/mutations';
+import { ME_QUERY } from 'src/gql/queries';
+import { LOGIN_MUTATION } from 'src/gql/mutations';
+import { ACCESS_TOKEN, REFRESH_TOKEN } from 'src/utils/constants';
 
 const AuthContext = createContext<AuthContextProps>({
   user: null,
@@ -21,15 +22,22 @@ export const AuthProvider = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<UserType | null>(null);
   const [status, setStatus] = useState<UserStatus>(UserStatus.loading);
-  const [accessToken, setAccessToken] = useLocalStorage('access_token', undefined);
-  const [refreshToken, setRefreshToken] = useLocalStorage('refresh_token', undefined);
-  const [loginMutation] = useMutation(LOGIN);
+  const [accessToken, setAccessToken] = useLocalStorage(ACCESS_TOKEN, undefined);
+  const [refreshToken, setRefreshToken] = useLocalStorage(REFRESH_TOKEN, undefined);
+  const [loginMutation] = useMutation(LOGIN_MUTATION);
 
-  useQuery(QUERY_ME, {
+  useQuery(ME_QUERY, {
     onCompleted: data => {
       setUser(data.me);
     }
   });
+
+  // useEffect(() => {
+  //   if (accessToken && refreshToken) {
+  //     setStatus(UserStatus.authenticated);
+  //   }
+  //   debugger;
+  // }, [accessToken, refreshToken]);
 
   const login = useCallback(
     ({ username, password }: { username: string; password: string }) => {

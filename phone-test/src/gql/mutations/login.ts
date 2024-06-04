@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 import { USER_FIELDS } from '../fragments/user';
 
-export const LOGIN = gql`
+export const LOGIN_MUTATION = gql`
   ${USER_FIELDS}
 
   mutation Login($input: LoginInput!) {
