@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { CALLS_PER_PAGE } from '../utils/constants';
+import { CALLS_PER_PAGE } from 'src/utils/constants';
 
 export const useSearch = () => {
   const [search] = useSearchParams();

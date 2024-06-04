@@ -1,12 +1,8 @@
 import { createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import { AppRedirect } from './AppRedirect';
-import { ProtectedRoute } from './components/routing/ProtectedRoute';
-import { NotFoundPage } from './pages/NotFoundPage';
-import { ErrorPage } from './pages/ErrorPage';
-import LoginPage from './pages/Login';
-import CallsListPage from './pages/CallsListPage';
-import CallDetailsPage from './pages/CallDetailsPage';
+import { AuthProvider } from 'src/context/AuthContext';
+import { AppRedirect } from 'src/AppRedirect';
+import { ProtectedRoute } from 'src/components';
+import { NotFoundPage, ErrorPage, LoginPage, CallsListPage, CallDetailsPage } from 'src/pages';
 
 const router = createBrowserRouter(
   createRoutesFromElements(

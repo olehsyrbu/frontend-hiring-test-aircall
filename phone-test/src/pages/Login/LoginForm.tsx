@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { ToastItem, Typography } from '@aircall/tractor';
 import {
   Button,
   Form,
@@ -25,7 +24,6 @@ export const LoginForm = ({ onSubmit, formState }: LoginFormProps) => {
     <Form
       onSubmit={e => {
         e.preventDefault();
-
         onSubmit(email, password);
       }}
       width="100%"

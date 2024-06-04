@@ -1,6 +1,6 @@
 import { isRouteErrorResponse, useRouteError } from 'react-router-dom';
-import { NotFoundPage } from './NotFoundPage';
-import { Typography } from '@aircall/tractor';
+import { Typography, Box } from '@aircall/tractor';
+import { NotFoundPage } from 'src/pages';
 
 export const ErrorPage = () => {
   const error = useRouteError();
@@ -9,8 +9,8 @@ export const ErrorPage = () => {
   }
 
   return (
-    <div>
+    <Box overflowY="auto" bg="black-a30" p={4} borderRadius={16}>
       <Typography>Opps, it is error page!</Typography>
-    </div>
+    </Box>
   );
 };

@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { Flex, Icon, LogoMarkMono, Spacer, useToast } from '@aircall/tractor';
-
+import { useAuth } from 'src/hooks/useAuth';
 import { FormState, FormStateEnum, LOGIN_REJECTED } from './Login.decl';
 import { LoginForm } from './LoginForm';
-import { useAuth } from '../../hooks/useAuth';
 
 export const LoginPage = () => {
   const { login } = useAuth();

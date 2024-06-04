@@ -1,14 +1,15 @@
 import { Outlet, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from 'src/hooks/useAuth';
 import { useEffect } from 'react';
-import { ProtectedLayout } from './ProtectedLayout';
+import { UserStatus } from 'src/declarations/user';
+import { ProtectedLayout } from 'src/components';
 
 export const ProtectedRoute = () => {
   const { user, status } = useAuth();
   const navigate = useNavigate();
-  // TODO check that the user is authenticated before displaying the route
+
   useEffect(() => {
-    if (status !== 'authenticated') return;
+    if (status !== UserStatus.authenticated) return;
     if (!user && window.location.pathname !== '/login') navigate('/login');
   }, [user, status, navigate]);
 

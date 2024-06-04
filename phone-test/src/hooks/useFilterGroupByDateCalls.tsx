@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { FilterValue } from 'src/declarations/filters';
 
 interface GroupedCallsByDateProps {
   [date: string]: Call[];
@@ -10,7 +11,7 @@ export const useFilterGroupByDateCalls = (filterValue: string, calls: Call[]) =>
     if (filterValue === '') return calls || [];
 
     return calls.filter((call: Call) => {
-      if (filterValue === 'inbound' || filterValue === 'outbound') {
+      if (filterValue === FilterValue.Inbound || filterValue === FilterValue.Outbound) {
         return call.direction === filterValue;
       }
       return call.call_type === filterValue;

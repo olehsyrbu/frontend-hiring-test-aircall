@@ -4,13 +4,10 @@ import { useQuery } from '@apollo/client';
 import styled from 'styled-components';
 import { Typography, Spacer, Pagination } from '@aircall/tractor';
 
-import { CALLS_PER_PAGE } from '../utils/constants';
-import { PAGINATED_CALLS } from '../gql/queries';
-import { useFilterGroupByDateCalls } from '../hooks/useFilterGroupByDateCalls';
-import { useSearch } from '../hooks/useSearch';
-import { useNavigateWithParams } from '../hooks/useNavigateWithParams';
-import { Call } from '../components/Call';
-import { Filter } from '../components/Filter';
+import { CALLS_PER_PAGE } from 'src/utils/constants';
+import { PAGINATED_CALLS } from 'src/gql/queries';
+import { useFilterGroupByDateCalls, useSearch, useNavigateWithParams } from 'src/hooks';
+import { Call, Filter } from 'src/components';
 
 const PaginationWrapper = styled.div`
   > div {
@@ -21,7 +18,7 @@ const PaginationWrapper = styled.div`
   }
 `;
 
-const CallsListPage = () => {
+export const CallsListPage = () => {
   const navigateWithParams = useNavigateWithParams();
   const navigate = useNavigate();
   const { activePage, perPage, filterValue } = useSearch();
@@ -90,5 +87,3 @@ const CallsListPage = () => {
     </>
   );
 };
-
-export default CallsListPage;

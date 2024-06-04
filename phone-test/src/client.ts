@@ -8,7 +8,7 @@ import {
 } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { GraphQLError } from 'graphql';
-import { REFRESH_TOKEN } from './gql/mutations/refreshToken';
+import { REFRESH_TOKEN } from 'src/gql/mutations/refreshToken';
 
 const REFRESH_TOKEN_V2 = 'refreshTokenV2';
 const UNAUTHORIZED = 'Unauthorized';

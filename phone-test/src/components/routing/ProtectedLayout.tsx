@@ -1,7 +1,7 @@
 import { Outlet, Link } from 'react-router-dom';
 import { Box, Flex, Spacer, Grid } from '@aircall/tractor';
-import logo from '../../logo.png';
-import { useAuth } from '../../hooks/useAuth';
+import logo from 'src/logo.png';
+import { useAuth } from 'src/hooks';
 
 export const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, logout } = useAuth();
