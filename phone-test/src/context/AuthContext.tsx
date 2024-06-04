@@ -32,13 +32,6 @@ export const AuthProvider = () => {
     }
   });
 
-  // useEffect(() => {
-  //   if (accessToken && refreshToken) {
-  //     setStatus(UserStatus.authenticated);
-  //   }
-  //   debugger;
-  // }, [accessToken, refreshToken]);
-
   const login = useCallback(
     ({ username, password }: { username: string; password: string }) => {
       return loginMutation({
