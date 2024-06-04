@@ -49,9 +49,16 @@ export const CallsListPage = () => {
     [navigateWithParams, navigate]
   );
 
-  if (loading) return <p>Loading calls...</p>;
-  if (error) return <p>ERROR</p>;
-  if (!data) return <p>Calls are empty...</p>;
+  if (loading) {
+    return <p>Loading calls...</p>;
+  }
+  if (error) {
+    return <p>ERROR</p>;
+  }
+
+  if (!data) {
+    return <p>Calls are empty...</p>;
+  }
 
   return (
     <>

@@ -6,6 +6,9 @@ describe('Check Login, detail page and logout', () => {
       this.user = user;
     });
   });
+  it('Login and redirect to call details with logout', () => {
+    cy.visit('/login');
+  });
 
   it('Login and redirect to call details with logout', () => {
     cy.visit('/login');

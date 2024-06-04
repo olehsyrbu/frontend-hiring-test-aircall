@@ -22,8 +22,8 @@ export const AuthProvider = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<UserType | null>(null);
   const [status, setStatus] = useState<UserStatus>(UserStatus.loading);
-  const [accessToken, setAccessToken] = useLocalStorage(ACCESS_TOKEN, undefined);
-  const [refreshToken, setRefreshToken] = useLocalStorage(REFRESH_TOKEN, undefined);
+  const [accessToken, setAccessToken] = useLocalStorage(ACCESS_TOKEN);
+  const [refreshToken, setRefreshToken] = useLocalStorage(REFRESH_TOKEN);
   const [loginMutation] = useMutation(LOGIN_MUTATION);
 
   useQuery(ME_QUERY, {

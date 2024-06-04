@@ -12,11 +12,17 @@ export const CallDetailsPage = () => {
     }
   });
 
-  if (loading) return <p>Loading call details...</p>;
-  if (error) return <p>ERROR</p>;
-  const { call } = data;
-  if (call === null) return <p>Not found</p>;
+  if (loading) {
+    return <p>Loading call details...</p>;
+  }
+  if (error) {
+    return <p>ERROR</p>;
+  }
+  if (!data.call) {
+    return <p>Not found</p>;
+  }
 
+  const { call } = data;
   return (
     <>
       <Typography variant="displayM" textAlign="center" py={3} data-cy="call-details-title">
