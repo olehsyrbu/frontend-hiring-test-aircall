@@ -6,11 +6,8 @@ describe('Check Login, detail page and logout', () => {
       this.user = user;
     });
   });
-  it('Login and redirect to call details with logout', () => {
-    cy.visit('/login');
-  });
 
-  it('Login and redirect to call details with logout', () => {
+  it('Login and redirect with logout', () => {
     cy.visit('/login');
 
     //set username and password
@@ -18,19 +15,15 @@ describe('Check Login, detail page and logout', () => {
     cy.get('#password').type(this.user.password).should('have.value', this.user.password);
     cy.get('button[type="submit"]').contains('Login').click();
 
-    //check if show loading calls
-    cy.get('p').contains('Loading calls...');
-    cy.wait(1000);
-
-    //check if show calls
-    cy.url().should('include', '/calls');
-
-    cy.get('[data-cy=call-detail]').first().click();
-    cy.get('p').contains('Loading call details...');
-    cy.wait(1000);
-
-    cy.get('[data-cy=call-details-title]').contains('Calls Details');
-
     cy.contains('a', 'logout').should('be.visible').click();
+    cy.url().should('include', '/login');
+    cy.getAllLocalStorage().should('be.empty');
+  });
+
+  it('Login without email and password', () => {
+    cy.visit('/login');
+    cy.get('button[type="submit"]').contains('Login').click();
+    cy.get('input:invalid').should('have.length', 2);
+    cy.url().should('include', '/login');
   });
 });

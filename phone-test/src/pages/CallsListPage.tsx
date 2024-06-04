@@ -68,7 +68,7 @@ export const CallsListPage = () => {
 
       <Filter onChange={handleChangeFilter} value={filterValue} />
 
-      <Spacer space={3} direction="vertical">
+      <Spacer space={3} direction="vertical" data-cy="call-list">
         {Object.entries(groupedCallsByDate).map(([date, calls]) => (
           <div key={date}>
             <Typography variant="displayS">{date}</Typography>
@@ -80,7 +80,7 @@ export const CallsListPage = () => {
       </Spacer>
 
       {totalCount && (
-        <PaginationWrapper>
+        <PaginationWrapper data-cy="pagination">
           <Pagination
             activePage={activePage}
             pageSize={perPage}
