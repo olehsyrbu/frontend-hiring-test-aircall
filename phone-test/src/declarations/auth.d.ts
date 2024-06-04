@@ -15,7 +15,7 @@ interface DeprecatedAuthResponseType {
   user: UserType;
 }
 
-export interface AuthContextProps {
+interface AuthContextProps {
   user: UserType | null;
   status: Status;
   accessToken: string | null;

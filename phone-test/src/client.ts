@@ -8,18 +8,24 @@ import {
 } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { GraphQLError } from 'graphql';
-import { REFRESH_TOKEN } from './gql/mutations/refreshToken';
+import { REFRESH_TOKEN_MUTATION } from 'src/gql/mutations/refreshToken';
+import {
+  ACCESS_TOKEN,
+  REFRESH_TOKEN_V2_MUTATION,
+  UNAUTHORIZED,
+  REFRESH_TOKEN
+} from 'src/utils/constants';
 
 const httpLink = createHttpLink({
   uri: 'https://frontend-test-api.aircall.dev/graphql'
 });
 
 const authLink = new ApolloLink((operation, forward) => {
-  const accessToken = localStorage.getItem('access_token');
+  const accessToken = localStorage.getItem(ACCESS_TOKEN);
   let token = accessToken || undefined;
 
-  if (operation.operationName === 'refreshTokenV2') {
-    const refreshToken = localStorage.getItem('refresh_token');
+  if (operation.operationName === REFRESH_TOKEN_V2_MUTATION) {
+    const refreshToken = localStorage.getItem(REFRESH_TOKEN);
     token = refreshToken || undefined;
   }
 
@@ -35,14 +41,14 @@ const authLink = new ApolloLink((operation, forward) => {
 const refreshToken = async () => {
   try {
     const { data } = await client.mutate({
-      mutation: REFRESH_TOKEN
+      mutation: REFRESH_TOKEN_MUTATION
     });
     const accessToken = data?.refreshTokenV2.access_token;
     if (!accessToken) {
       throw new GraphQLError('Empty AccessToken');
     }
 
-    localStorage.setItem('access_token', JSON.stringify(accessToken));
+    localStorage.setItem(ACCESS_TOKEN, JSON.stringify(accessToken));
     return accessToken;
   } catch (err) {
     localStorage.clear();
@@ -54,16 +60,14 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
   if (graphQLErrors) {
     for (let err of graphQLErrors) {
       switch (err.message) {
-        case 'Unauthorized':
+        case UNAUTHORIZED:
           // ignore 401 error for a refresh request
-          if (operation.operationName === 'refreshTokenV2') return;
+          if (operation.operationName === REFRESH_TOKEN_V2_MUTATION) return;
 
-          const observable = new Observable<FetchResult<Record<string, any>>>(observer => {
-            // used an annonymous function for using an async function
+          const observable = new Observable<FetchResult<Record<string, object>>>(observer => {
             (async () => {
               try {
                 const accessToken = await refreshToken();
-
                 operation.setContext({
                   headers: {
                     ...operation.getContext().headers,
@@ -71,14 +75,11 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
                   }
                 });
 
-                // Retry the failed request
-                const subscriber = {
+                forward(operation).subscribe({
                   next: observer.next.bind(observer),
                   error: observer.error.bind(observer),
                   complete: observer.complete.bind(observer)
-                };
-
-                forward(operation).subscribe(subscriber);
+                });
               } catch (err) {
                 observer.error(err);
               }
@@ -90,7 +91,9 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
     }
   }
 
-  if (networkError) console.log(`[Network error]: ${networkError}`);
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`);
+  }
 });
 
 const client = new ApolloClient({

@@ -1,11 +1,11 @@
-import './App.css';
 import { RouterProvider } from 'react-router-dom';
 import { Tractor } from '@aircall/tractor';
 import { ApolloProvider } from '@apollo/client';
-import { darkTheme } from './style/theme/darkTheme';
-import { GlobalAppStyle } from './style/global';
-import client from './client';
-import router from './router';
+import { darkTheme } from 'src/style/theme/darkTheme';
+import { GlobalAppStyle } from 'src/style/global';
+import client from 'src/client';
+import router from 'src/router';
+import 'src/App.css';
 
 function App() {
   return (

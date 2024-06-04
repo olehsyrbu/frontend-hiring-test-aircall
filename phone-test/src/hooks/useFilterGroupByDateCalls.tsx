@@ -1,20 +1,22 @@
 import { useMemo } from 'react';
-import { Call } from '../components/Call';
+import { FilterValue } from 'src/declarations/filters';
 
 interface GroupedCallsByDateProps {
   [date: string]: Call[];
 }
 
-export const useFilterGroupByDateCalls = (filterValue: string, calls: Call[]) => {
-  const filteredCalls = useMemo<Call[]>(() => {
-    if (filterValue === '') return calls || [];
-    return calls.filter((call: Call) => {
-      if (filterValue === '') return true;
-      if (filterValue === 'inbound' || filterValue === 'outbound') {
-        return call.direction === filterValue;
-      }
-      return call.call_type === filterValue;
-    });
+export const useFilterGroupByDateCalls = (
+  filterValue: FilterValue,
+  calls: Call[]
+): GroupedCallsByDateProps => {
+  const filteredCalls = useMemo(() => {
+    if (!calls || filterValue === '') return calls || [];
+
+    return calls.filter((call: Call) =>
+      filterValue === FilterValue.Inbound || filterValue === FilterValue.Outbound
+        ? call.direction === filterValue
+        : call.call_type === filterValue
+    );
   }, [filterValue, calls]);
 
   const groupedCallsByDate: GroupedCallsByDateProps = useMemo(

@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 import { USER_FIELDS } from '../fragments/user';
 
-export const REFRESH_TOKEN = gql`
+export const REFRESH_TOKEN_MUTATION = gql`
   ${USER_FIELDS}
   mutation refreshTokenV2 {
     refreshTokenV2 {

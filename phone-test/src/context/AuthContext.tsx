@@ -1,20 +1,16 @@
-import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useMemo, useState, useEffect } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { FetchResult, useMutation, useQuery } from '@apollo/client';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-import { LOGIN } from '../gql/mutations';
-import { AuthContextProps } from '../declarations/auth';
-import { ME } from '../gql/queries/me';
-
-enum Status {
-  loading = 'loading',
-  authenticated = 'authenticated',
-  unauthenticated = 'unauthenticated'
-}
+import { useLocalStorage } from 'src/hooks/useLocalStorage';
+import { AuthContextProps } from 'src/declarations/auth';
+import { UserStatus, UserType } from 'src/declarations/user';
+import { ME_QUERY } from 'src/gql/queries';
+import { LOGIN_MUTATION } from 'src/gql/mutations';
+import { ACCESS_TOKEN, REFRESH_TOKEN } from 'src/utils/constants';
 
 const AuthContext = createContext<AuthContextProps>({
   user: null,
-  status: Status.loading,
+  status: UserStatus.loading,
   accessToken: null,
   refreshToken: null,
   login: ({ username, password }: { username: string; password: string }) =>
@@ -25,18 +21,16 @@ const AuthContext = createContext<AuthContextProps>({
 export const AuthProvider = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<UserType | null>(null);
-  const [status, setStatus] = useState<Status>(Status.loading);
-  const [accessToken, setAccessToken] = useLocalStorage('access_token', undefined);
-  const [refreshToken, setRefreshToken] = useLocalStorage('refresh_token', undefined);
-  const [loginMutation] = useMutation(LOGIN);
-  const { loading, error, data } = useQuery(ME);
-  const { me } = data || {};
+  const [status, setStatus] = useState<UserStatus>(UserStatus.loading);
+  const [accessToken, setAccessToken] = useLocalStorage(ACCESS_TOKEN, undefined);
+  const [refreshToken, setRefreshToken] = useLocalStorage(REFRESH_TOKEN, undefined);
+  const [loginMutation] = useMutation(LOGIN_MUTATION);
 
-  useEffect(() => {
-    if (!loading && !error && me?.username) {
-      setUser(me);
+  useQuery(ME_QUERY, {
+    onCompleted: data => {
+      setUser(data.me);
     }
-  }, [me, loading, error]);
+  });
 
   const login = useCallback(
     ({ username, password }: { username: string; password: string }) => {
@@ -55,7 +49,7 @@ export const AuthProvider = () => {
           setAccessToken(access_token);
           setRefreshToken(refresh_token);
           setUser(user);
-          setStatus(Status.authenticated);
+          setStatus(UserStatus.authenticated);
           navigate('/calls');
         }
       });
@@ -66,7 +60,7 @@ export const AuthProvider = () => {
   const logout = useCallback(() => {
     setAccessToken(null);
     setRefreshToken(null);
-    setStatus(Status.unauthenticated);
+    setStatus(UserStatus.unauthenticated);
     navigate('/login', { replace: true });
   }, [navigate, setAccessToken, setRefreshToken]);
 

@@ -1,12 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { useParams } from 'react-router-dom';
-import { GET_CALL_DETAILS } from '../gql/queries/getCallDetails';
-import { ArchiveFilled, Box, Button, Icon, SpinnerOutlined, Typography } from '@aircall/tractor';
-import { formatDate, formatDuration } from '../helpers/dates';
-import { ARCHIVE_CALL } from '../gql/mutations/archive';
 import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { ArchiveFilled, Box, Button, Icon, SpinnerOutlined, Typography } from '@aircall/tractor';
+import { GET_CALL_DETAILS } from 'src/gql/queries/getCallDetails';
+import { formatDate, formatDuration } from 'src/helpers/dates';
+import { ARCHIVE_CALL } from 'src/gql/mutations/archive';
 
-const CallDetailsPage = () => {
+export const CallDetailsPage = () => {
   const { callId } = useParams();
   const { loading, error, data, refetch } = useQuery(GET_CALL_DETAILS, {
     variables: {
@@ -28,7 +28,6 @@ const CallDetailsPage = () => {
 
   if (loading) return <p>Loading call details...</p>;
   if (error) return <p>ERROR</p>;
-
   const { call } = data;
   if (call === null) return <p>Not found</p>;
 
@@ -84,4 +83,3 @@ const CallDetailsPage = () => {
     </>
   );
 };
-export default CallDetailsPage;
