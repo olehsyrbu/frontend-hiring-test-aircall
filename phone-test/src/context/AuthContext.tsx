@@ -1,8 +1,8 @@
-import { createContext, useCallback, useMemo, useState, useEffect } from 'react';
+import { createContext, useCallback, useMemo, useState } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { FetchResult, useMutation, useQuery } from '@apollo/client';
 import { useLocalStorage } from 'src/hooks/useLocalStorage';
-import { AuthContextProps } from 'src/declarations/auth';
+import { AuthContextProps, AuthResponseType } from 'src/declarations/auth';
 import { UserStatus, UserType } from 'src/declarations/user';
 import { ME_QUERY } from 'src/gql/queries';
 import { LOGIN_MUTATION } from 'src/gql/mutations';
@@ -14,7 +14,7 @@ const AuthContext = createContext<AuthContextProps>({
   accessToken: null,
   refreshToken: null,
   login: ({ username, password }: { username: string; password: string }) =>
-    Promise.resolve({} as FetchResult<any>),
+    Promise.resolve({} as FetchResult<AuthResponseType>),
   logout: () => {}
 });
 
