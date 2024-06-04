@@ -1,33 +1,45 @@
 /// <reference types="cypress" />
 
 describe('Check Login, detail page and logout', () => {
-  before(() => {
+  beforeEach(() => {
     cy.fixture('user').then(user => {
-      this.user = user;
+      cy.visit('/login');
+      cy.get('#email').type(user.email);
+      cy.get('#password').type(user.password);
+      cy.get('button[type="submit"]').contains('Login').click();
     });
   });
 
-  it('Login and redirect to call details with logout', () => {
+  it('Should can not Login without email and password', () => {
     cy.visit('/login');
-
-    //set username and password
-    cy.get('#email').type(this.user.email).should('have.value', this.user.email);
-    cy.get('#password').type(this.user.password).should('have.value', this.user.password);
     cy.get('button[type="submit"]').contains('Login').click();
+    cy.get('input:invalid').should('have.length', 2);
+    cy.url().should('include', '/login');
+  });
 
-    //check if show loading calls
-    cy.get('p').contains('Loading calls...');
-    cy.wait(1000);
+  it('Should Login with email and password', () => {
+    cy.url().should('include', '/calls');
+    cy.get('[data-cy="username"]').should('be.visible').contains(`Welcome 123@google.com`);
+    cy.get('a').contains('logout').should('be.visible');
+  });
 
-    //check if show calls
+  it('Should check Calls page', () => {
     cy.url().should('include', '/calls');
 
+    cy.get('[data-cy="calls-list-title"]').should('be.visible');
+    cy.get(':nth-child(2) > [data-test="select-trigger-container"]').should('be.visible');
+    cy.get('[data-cy=call-list]').should('be.visible');
+  });
+
+  it('Should check Call detail page', () => {
     cy.get('[data-cy=call-detail]').first().click();
-    cy.get('p').contains('Loading call details...');
-    cy.wait(1000);
+    cy.get('[data-cy=call-details-title]').should('be.visible');
+    cy.get('[data-cy=call-details-body]').should('be.visible');
+  });
 
-    cy.get('[data-cy=call-details-title]').contains('Calls Details');
-
+  it('Should logout with remove tokens', () => {
     cy.contains('a', 'logout').should('be.visible').click();
+    cy.url().should('include', '/login');
+    cy.getAllLocalStorage().should('be.empty');
   });
 });

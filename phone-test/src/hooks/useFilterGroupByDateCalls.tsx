@@ -10,7 +10,9 @@ export const useFilterGroupByDateCalls = (
   calls: Call[]
 ): GroupedCallsByDateProps => {
   const filteredCalls = useMemo(() => {
-    if (!calls || filterValue === '') return calls || [];
+    if (!calls || filterValue === FilterValue.All) {
+      return calls || [];
+    }
 
     return calls.filter((call: Call) =>
       filterValue === FilterValue.Inbound || filterValue === FilterValue.Outbound

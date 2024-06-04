@@ -26,10 +26,15 @@ export const CallDetailsPage = () => {
     };
   }, [refetch]);
 
-  if (loading) return <p>Loading call details...</p>;
-  if (error) return <p>ERROR</p>;
-  const { call } = data;
-  if (call === null) return <p>Not found</p>;
+  if (loading) {
+    return <p>Loading call details...</p>;
+  }
+  if (error) {
+    return <p>ERROR</p>;
+  }
+  if (!data.call) {
+    return <p>Not found</p>;
+  }
 
   const handleArchive = async () => {
     archiveMutation({
@@ -42,16 +47,13 @@ export const CallDetailsPage = () => {
     });
   };
 
+  const { call } = data;
   return (
     <>
       <Typography variant="displayM" textAlign="center" py={3} data-cy="call-details-title">
         Calls Details
       </Typography>
-      <Box overflowY="auto" bg="black-a30" p={4} borderRadius={16}>
-        <Typography variant="heading">{`ID: ${call.id}`}</Typography>
-      </Box>
-
-      <Box overflowY="auto" bg="black-a30" p={4} borderRadius={16}>
+      <Box overflowY="auto" bg="black-a30" p={4} borderRadius={16} data-cy="call-details-body">
         <Typography variant="subheading">{`Type: ${call.call_type}`}</Typography>
         <Typography variant="subheading">{`Created at: ${formatDate(call.created_at)}`}</Typography>
         <Typography variant="subheading">{`Direction: ${call.direction}`}</Typography>

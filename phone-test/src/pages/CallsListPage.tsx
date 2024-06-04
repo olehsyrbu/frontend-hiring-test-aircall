@@ -49,19 +49,26 @@ export const CallsListPage = () => {
     [navigateWithParams, navigate]
   );
 
-  if (loading) return <p>Loading calls...</p>;
-  if (error) return <p>ERROR</p>;
-  if (!data) return <p>Calls are empty...</p>;
+  if (loading) {
+    return <p>Loading calls...</p>;
+  }
+  if (error) {
+    return <p>ERROR</p>;
+  }
+
+  if (!data) {
+    return <p>Calls are empty...</p>;
+  }
 
   return (
     <>
-      <Typography variant="displayM" textAlign="center" py={3}>
+      <Typography variant="displayM" textAlign="center" py={3} data-cy="calls-list-title">
         Calls History
       </Typography>
 
       <Filter onChange={handleChangeFilter} value={filterValue} />
 
-      <Spacer space={3} direction="vertical">
+      <Spacer space={3} direction="vertical" data-cy="call-list">
         {Object.entries(groupedCallsByDate).map(([date, calls]) => (
           <div key={date}>
             <Typography variant="displayS">{date}</Typography>
@@ -73,7 +80,7 @@ export const CallsListPage = () => {
       </Spacer>
 
       {totalCount && (
-        <PaginationWrapper>
+        <PaginationWrapper data-cy="pagination">
           <Pagination
             activePage={activePage}
             pageSize={perPage}

@@ -13,12 +13,15 @@ const filterOptions: FilterOption[] = [
 export const Filter = ({ onChange, value }: { onChange: (key: string) => void; value: string }) => {
   return (
     <Select
+      data-cy="filter-select"
       selectionMode="single"
       size="small"
       selectedKeys={[value]}
       options={filterOptions}
       onSelectionChange={selectedKeys => {
-        if (selectedKeys.length === 0) return;
+        if (selectedKeys.length === 0) {
+          return;
+        }
         onChange(selectedKeys[0]);
       }}
     />
